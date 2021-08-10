@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import { MONGODB_URL } from './config'
 import { todoRouter } from './controller/todo'
+import { errorHandler } from './utils/errorhandler'
 
 mongoose
   .connect(MONGODB_URL, {
@@ -27,5 +28,7 @@ app.get('/ping', (req: Request, res: Response) => {
 })
 
 app.use('/api/todo', todoRouter)
+
+app.use(errorHandler)
 
 export { app }

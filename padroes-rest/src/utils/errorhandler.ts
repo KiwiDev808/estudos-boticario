@@ -16,3 +16,5 @@ const errorHandler = (
 
   next(error)
 }
+
+export { errorHandler }

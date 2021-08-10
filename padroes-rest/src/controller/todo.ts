@@ -11,7 +11,10 @@ todoRouter.get('/', async (req: Request, res: Response) => {
 
 todoRouter.get('/:id', async (req: Request, res: Response) => {
   const todo = await Todo.findById(req.params.id)
-  return res.send({ todo })
+  if (!todo) {
+    return res.status(404).send({ message: 'todo not found' })
+  }
+  return res.send(todo)
 })
 
 todoRouter.post('/', async (request, response) => {
