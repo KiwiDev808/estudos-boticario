@@ -44,6 +44,7 @@ todoRouter.put('/:id', async (request, response) => {
 
   const updatedTodo = await Todo.findByIdAndUpdate(request.params.id, todo, {
     new: true,
+    runValidators: true,
   })
   response.json(updatedTodo.toJSON())
 })
