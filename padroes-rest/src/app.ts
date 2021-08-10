@@ -1,6 +1,6 @@
 import cors from 'cors'
 import express, { Request, Response } from 'express'
-import * as mongoose from 'mongoose'
+import mongoose from 'mongoose'
 import { MONGODB_URL } from './config'
 import { todoRouter } from './controller/todo'
 

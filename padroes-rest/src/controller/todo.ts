@@ -1,11 +1,17 @@
 import { Request, Response, Router } from 'express'
 import Todo from '../models/todo'
+require('express-async-errors')
 
 const todoRouter = Router()
 
 todoRouter.get('/', async (req: Request, res: Response) => {
   const todoList = await Todo.find({})
   return res.send({ todoList })
+})
+
+todoRouter.get('/:id', async (req: Request, res: Response) => {
+  const todo = await Todo.findById(req.params.id)
+  return res.send({ todo })
 })
 
 todoRouter.post('/', async (request, response) => {
@@ -39,9 +45,9 @@ todoRouter.put('/:id', async (request, response) => {
   response.json(updatedTodo.toJSON())
 })
 
-todoRouter.delete('/:id', async (request, response) => {
-  await Todo.findByIdAndDelete(request.params.id)
-  response.status(204).end()
+todoRouter.delete('/:id', async (req, res) => {
+  await Todo.findByIdAndDelete(req.params.id)
+  res.status(204).end()
 })
 
 export { todoRouter }

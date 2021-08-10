@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose'
+import mongoose from 'mongoose'
 
 const todoSchema = new mongoose.Schema({
   author: { type: String, required: true },
@@ -19,4 +19,4 @@ todoSchema.set('toJSON', {
   },
 })
 
-export default mongoose.model('Blog', todoSchema)
+export default mongoose.model('Todo', todoSchema)
