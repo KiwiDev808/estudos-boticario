@@ -4,6 +4,13 @@ require('express-async-errors')
 
 const todoRouter = Router()
 
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Retrieve a list of JSONPlaceholder users
+ *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
+ */
 todoRouter.get('/', async (req: Request, res: Response) => {
   const todoList = await Todo.find({})
   return res.json({ todoList })
