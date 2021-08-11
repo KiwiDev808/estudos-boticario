@@ -6,7 +6,7 @@ const todoRouter = Router()
 
 todoRouter.get('/', async (req: Request, res: Response) => {
   const todoList = await Todo.find({})
-  return res.send({ todoList })
+  return res.json({ todoList })
 })
 
 todoRouter.get('/:id', async (req: Request, res: Response) => {
@@ -14,14 +14,14 @@ todoRouter.get('/:id', async (req: Request, res: Response) => {
   if (!todo) {
     return res.status(404).send({ message: 'todo not found' })
   }
-  return res.send(todo)
+  return res.json(todo)
 })
 
-todoRouter.post('/', async (request, response) => {
-  const body = request.body
+todoRouter.post('/', async (req: Request, res: Response) => {
+  const body = req.body
 
   if (!body?.author && !body?.description) {
-    return response.status(400).json({
+    return res.status(400).json({
       error: 'author or description is missing',
     })
   }
@@ -32,24 +32,24 @@ todoRouter.post('/', async (request, response) => {
   })
 
   const result = await todo.save()
-  response.status(201).json(result)
+  res.status(201).json(result)
 })
 
-todoRouter.put('/:id', async (request, response) => {
-  const body = request.body
+todoRouter.put('/:id', async (req: Request, res: Response) => {
+  const body = req.body
 
   const todo = {
     status: body.status,
   }
 
-  const updatedTodo = await Todo.findByIdAndUpdate(request.params.id, todo, {
+  const updatedTodo = await Todo.findByIdAndUpdate(req.params.id, todo, {
     new: true,
     runValidators: true,
   })
-  response.json(updatedTodo.toJSON())
+  res.json(updatedTodo.toJSON())
 })
 
-todoRouter.delete('/:id', async (req, res) => {
+todoRouter.delete('/:id', async (req: Request, res: Response) => {
   await Todo.findByIdAndDelete(req.params.id)
   res.status(204).end()
 })
