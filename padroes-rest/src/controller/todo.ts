@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express'
 import Todo from '../models/todo'
 import { DbTodo } from '../types/Todo'
 import { validStatus } from '../utils/validStatus'
+import { validString } from '../utils/validString'
 require('express-async-errors')
 
 const todoRouter = Router()

@@ -1,4 +1,4 @@
-const validString = (value: any): boolean => {
+export const validString = (value: any): boolean => {
   if (typeof value === 'string' && value) {
     return true
   }
