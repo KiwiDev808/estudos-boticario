@@ -1,6 +1,5 @@
 import { Request, Response, Router } from 'express'
 import Todo from '../models/todo'
-import { DbTodo } from '../types/Todo'
 import { validStatus } from '../utils/validStatus'
 import { validString } from '../utils/validString'
 require('express-async-errors')
@@ -15,7 +14,7 @@ todoRouter.get('/', async (req: Request, res: Response) => {
                schema: { todoList: [{$ref: "#/definitions/Todo"}] },
   } */
 
-  const todoList: DbTodo[] = await Todo.find({})
+  const todoList: any[] = await Todo.find({})
   return res.json({ todoList })
 })
 
@@ -39,7 +38,7 @@ todoRouter.get('/:id', async (req: Request, res: Response) => {
               schema: { message: 'todo not found' }
   } */
 
-  const todo: DbTodo = await Todo.findById(req.params.id)
+  const todo: any = await Todo.findById(req.params.id)
 
   if (!todo) {
     return res.status(404).send({ message: 'todo not found' })
@@ -76,7 +75,7 @@ todoRouter.post('/', async (req: Request, res: Response) => {
     status: 'todo',
   })
 
-  const result: DbTodo = await todo.save()
+  const result: any = await todo.save()
   res.status(201).json(result)
 })
 
@@ -118,13 +117,9 @@ todoRouter.put('/:id', async (req: Request, res: Response) => {
     status: body.status,
   }
 
-  const updatedTodo: DbTodo = await Todo.findByIdAndUpdate(
-    req.params.id,
-    todo,
-    {
-      new: true,
-    }
-  )
+  const updatedTodo: any = await Todo.findByIdAndUpdate(req.params.id, todo, {
+    new: true,
+  })
 
   res.json(updatedTodo.toJSON())
 })
