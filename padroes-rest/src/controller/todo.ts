@@ -1,5 +1,7 @@
 import { Request, Response, Router } from 'express'
 import Todo from '../models/todo'
+import { TodoTask } from '../types/Todo'
+import { validStatus } from '../utils/validStatus'
 require('express-async-errors')
 
 const todoRouter = Router()
@@ -36,7 +38,7 @@ todoRouter.get('/:id', async (req: Request, res: Response) => {
               schema: { message: 'todo not found' }
   } */
 
-  const todo = await Todo.findById(req.params.id)
+  const todo: TodoTask = await Todo.findById(req.params.id)
 
   if (!todo) {
     return res.status(404).send({ message: 'todo not found' })
@@ -57,14 +59,14 @@ todoRouter.post('/', async (req: Request, res: Response) => {
   // #swagger.responses[201] = { schema: { $ref: "#/definitions/Todo" }, description: 'Todo criado.'  }
   /* #swagger.responses[400] = { 
     description: 'Invalid Parameters',
-    schema: { error: 'author or description is missing' }
+    schema: { error: 'author or description is missing or invalid' }
   } */
 
   const body = req.body
 
-  if (!body?.author && !body?.description) {
+  if (!validString(body?.author) && !validString(body?.description)) {
     return res.status(400).json({
-      error: 'author or description is missing',
+      error: 'author or description is missing or invalid',
     })
   }
 
@@ -105,7 +107,7 @@ todoRouter.put('/:id', async (req: Request, res: Response) => {
 
   const body = req.body
 
-  if (!['todo', 'doing', 'done'].includes(req.body?.status)) {
+  if (validStatus(req.body.status)) {
     return res.status(422).json({
       error: `the status ${req.body?.status} is invalid, please put a valid status e.g "todo", "doing", "done"`,
     })
