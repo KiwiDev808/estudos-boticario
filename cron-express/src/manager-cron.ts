@@ -1,7 +1,9 @@
+import cron from 'node-cron'
+import SendMailDailyTask from './cron/SendMailDaily'
 class ManagerCron {
-  private jobs!: Array<any>
+  private jobs!: Array<cron.ScheduledTask>
   constructor() {
-    this.jobs = []
+    this.jobs = [SendMailDailyTask]
   }
 
   run() {
