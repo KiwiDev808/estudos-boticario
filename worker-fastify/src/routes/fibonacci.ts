@@ -14,7 +14,7 @@ const fibonacciOpts: RouteShorthandOptions = {
       200: {
         type: 'object',
         properties: {
-          hello: { type: 'number' },
+          result: { type: 'number' },
         },
       },
     },
@@ -26,13 +26,13 @@ const fibonacciRoute: FastifyPluginCallback = (fastify, options, done) => {
     Querystring: { value: string }
   }>('/', fibonacciOpts, async (request, reply) => {
     try {
-      const value = Number(request.query.value)
+      const value = request.query.value ? Number(request.query.value) : 1
       if (isNaN(value)) {
         throw new Error('Invalid number')
       }
       const result = await pool.exec('fibonacci', [value])
       await pool.terminate()
-      return { hello: result }
+      return { result }
     } catch (err) {
       await pool.terminate()
       return reply.code(400).send(err)
