@@ -13,9 +13,15 @@ const server: FastifyInstance = fastify({
 server.register(fastifySwagger, swaggerOptions)
 server.register(fibonacciRoute, { prefix: '/fibonacci' })
 
-server.get('/ping', async (request, reply) => {
-  return reply.send({ message: 'pong\n' })
-})
+server.get(
+  '/ping',
+  {
+    schema: { tags: ['HealthCheck'], summary: `Check if the server is online` },
+  },
+  async (request, reply) => {
+    return reply.send({ message: 'pong' })
+  }
+)
 
 const start = async () => {
   try {

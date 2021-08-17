@@ -16,6 +16,10 @@ const swaggerOptions: SwaggerOptions = {
     schemes: ['http'],
     consumes: ['application/json'],
     produces: ['application/json'],
+    tags: [
+      { name: 'Math', description: 'Math Operations' },
+      { name: 'HealthCheck', description: 'Check server health' },
+    ],
   },
 
   exposeRoute: true,
