@@ -9,3 +9,5 @@ export type TodoTask = {
   description: string
   status: TodoStatus
 }
+
+export type DbTodoTask = TodoTask & { id: string }

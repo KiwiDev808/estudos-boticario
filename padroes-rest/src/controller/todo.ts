@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import Todo from '../models/todo'
+import Todo from '../repositories/implementations/todo'
 import { validStatus } from '../utils/validStatus'
 import { validString } from '../utils/validString'
 
