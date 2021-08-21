@@ -4,7 +4,7 @@ export interface ITodoRepository {
   getAll(): Promise<DbTodoTask[]>
   find(id: string): Promise<DbTodoTask | null>
   save(data: TodoTask): Promise<DbTodoTask>
-  update(
+  updateStatus(
     id: string,
     data: Omit<TodoTask, 'author' | 'description'>
   ): Promise<DbTodoTask | null>

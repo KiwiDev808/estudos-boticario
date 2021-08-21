@@ -1,9 +1,10 @@
 import { Router } from 'express'
-import { TodoController } from '../controller/todo'
+import { TodoController } from '../controller/todoController'
+import { MongoTodoRepository } from '../repositories/implementations/MongoTodoRepository'
 require('express-async-errors')
 
 const todoRouter = Router()
-const todoController = new TodoController()
+const todoController = new TodoController(new MongoTodoRepository())
 
 todoRouter.get('/', todoController.getAllTodos)
 

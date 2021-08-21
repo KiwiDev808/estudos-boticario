@@ -1,29 +1,12 @@
-import { Document, Model, model, Schema, SchemaDefinition } from 'mongoose'
+import mongoose, {
+  Document,
+  Model,
+  model,
+  Schema,
+  SchemaDefinition,
+} from 'mongoose'
 import { DbTodoTask, TodoTask } from '../../types/Todo'
 import { ITodoRepository } from '../ITodoRepository'
-
-function todoTransformer(document: Document, returnedObject: any) {
-  returnedObject.id = returnedObject._id.toString()
-  delete returnedObject._id
-  delete returnedObject.__v
-}
-
-const todoSchema = new Schema<TodoTask>({
-  author: { type: String, required: true },
-  description: { type: String, required: true },
-  status: {
-    type: String,
-    enum: ['todo', 'doing', 'done'],
-    required: true,
-  },
-})
-
-todoSchema.set('toJSON', {
-  transform: todoTransformer,
-})
-
-const todoModel = model<TodoTask>('Todo', todoSchema)
-export default todoModel
 
 export class MongoTodoRepository implements ITodoRepository {
   private model!: Model<DbTodoTask>
@@ -39,7 +22,7 @@ export class MongoTodoRepository implements ITodoRepository {
   }
 
   constructor() {
-    const todoSchema = new Schema<TodoTask>(this.schema)
+    const todoSchema = new Schema<DbTodoTask>(this.schema)
 
     todoSchema.set('toJSON', {
       transform: (document: Document, returnedObject: any) => {
@@ -49,10 +32,10 @@ export class MongoTodoRepository implements ITodoRepository {
       },
     })
 
-    this.model = model<DbTodoTask>('Todo', todoSchema)
+    this.model = mongoose.models.Todo || model<DbTodoTask>('Todo', todoSchema)
   }
 
-  async getAll(): Promise<DbTodoTask[]> {
+  public async getAll(): Promise<DbTodoTask[]> {
     return await this.model.find({})
   }
 
@@ -69,7 +52,7 @@ export class MongoTodoRepository implements ITodoRepository {
     return result
   }
 
-  async update(
+  async updateStatus(
     id: string,
     data: Omit<TodoTask, 'author' | 'description'>
   ): Promise<DbTodoTask | null> {
