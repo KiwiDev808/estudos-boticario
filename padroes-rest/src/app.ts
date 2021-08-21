@@ -1,6 +1,8 @@
 import cors from 'cors'
 import express, { Request, Response } from 'express'
 import mongoose from 'mongoose'
+import swaggerUi from 'swagger-ui-express'
+import swaggerFile from '../swagger_output.json'
 import { MONGODB_URL } from './config'
 import { todoRouter } from './routes/todoRoute'
 import { errorHandler } from './utils/errorhandler'
@@ -29,7 +31,7 @@ app.get('/ping', (req: Request, res: Response) => {
 })
 
 app.use('/api/todo', todoRouter)
-// app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.use(errorHandler)
 
