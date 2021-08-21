@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../swagger_output.json'
 import { MONGODB_URL } from './config'
-import { todoRouter } from './controller/todo'
+import { todoRouter } from './routes/todoRoute'
 import { errorHandler } from './utils/errorhandler'
 
 const app = express()
