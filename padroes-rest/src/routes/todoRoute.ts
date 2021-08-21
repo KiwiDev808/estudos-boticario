@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { AppRoutes } from '../app'
 import { TodoController } from '../controller/todoController'
 import { MongoTodoRepository } from '../repositories/implementations/MongoTodoRepository'
 require('express-async-errors')
@@ -16,4 +17,9 @@ todoRouter.put('/:id', todoController.updateTodo)
 
 todoRouter.delete('/:id', todoController.deleteTodo)
 
-export { todoRouter }
+const todoHandle: AppRoutes = {
+  path: '/api/todo',
+  handle: todoRouter,
+}
+
+export { todoHandle }

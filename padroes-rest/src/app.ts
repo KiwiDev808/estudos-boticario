@@ -1,38 +1,68 @@
 import cors from 'cors'
-import express, { Request, Response } from 'express'
+import express, { Express, Router } from 'express'
 import mongoose from 'mongoose'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../swagger_output.json'
 import { MONGODB_URL } from './config'
-import { todoRouter } from './routes/todoRoute'
 import { errorHandler } from './utils/errorhandler'
+export interface AppRoutes {
+  path: string
+  handle: Router
+}
+export class App {
+  private express: Express = express()
 
-const app = express()
+  constructor(private routes: AppRoutes[]) {}
 
-mongoose
-  .connect(MONGODB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-  })
-  .then(() => {
-    console.log('connected to MongoDB')
-  })
-  .catch((error) => {
-    console.log('error connecting to MongoDB:', error.message)
-  })
+  public init = (): App => {
+    this.connectDb()
+    this.middlewares()
+    this.ping()
+    this.router()
+    this.errorHandler()
 
-app.use(express.json())
-app.use(cors())
+    return this
+  }
 
-app.get('/ping', (req: Request, res: Response) => {
-  return res.send({ message: 'pong' })
-})
+  private connectDb(): void {
+    mongoose
+      .connect(MONGODB_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+        useCreateIndex: true,
+      })
+      .then(() => {
+        console.log('connected to MongoDB')
+      })
+      .catch((error) => {
+        console.log('error connecting to MongoDB:', error.message)
+      })
+  }
 
-app.use('/api/todo', todoRouter)
-app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+  private middlewares(): void {
+    this.express.use(express.json())
+    this.express.use(cors())
+  }
 
-app.use(errorHandler)
+  private errorHandler(): void {
+    this.express.use(errorHandler)
+  }
 
-export { app }
+  private router(): void {
+    this.routes.forEach((route) => {
+      this.express.use(route.path, route.handle)
+    })
+    this.express.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+  }
+
+  public listen(port: number, callback: () => void): void {
+    this.express.listen(port, callback)
+  }
+
+  private ping(): void {
+    this.express.get('/ping', (_, res) => {
+      res.send({ message: 'pong' })
+    })
+  }
+}

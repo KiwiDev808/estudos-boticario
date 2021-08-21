@@ -109,9 +109,7 @@ export class TodoController {
 
     const body = req.body
 
-    console.log('here')
     if (!validStatus(req.body.status)) {
-      console.log('here')
       return res.status(422).json({
         error: `the status ${req.body?.status} is invalid, please put a valid status e.g "todo", "doing" or "done"`,
       })
