@@ -13,7 +13,7 @@ describe('Valid Status', () => {
     })
   })
   describe('invalid status values', () => {
-    it('should return false to "hello world"', () => {
+    it('should return false to string value', () => {
       expect(validStatus('hello world')).toBe(false)
     })
     it('should return false to number value', () => {
